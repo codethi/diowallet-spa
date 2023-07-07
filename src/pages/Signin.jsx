@@ -2,18 +2,34 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Button from "../components/Button";
 import Input from "../components/Input";
+import { useForm } from "react-hook-form";
 
 export default function Signin() {
-  //codigos Js
-  //const name = "Thiago";
+  const { register, handleSubmit } = useForm();
 
-  //retorno HTML
+  function handleSubmitForm(data) {
+    console.log(data);
+  }
+
   return (
     <div className="flex flex-col items-center justify-around bg-zinc-900 rounded p-8 w-[35rem] h-[35rem]">
       <img src={logo} alt="" className="w-44" />
-      <form className="flex flex-col justify-center gap-4 w-full text-2xl">
-        <Input type="email" placeholder="Email" />
-        <Input type="password" placeholder="Password" />
+      <form
+        onSubmit={handleSubmit(handleSubmitForm)}
+        className="flex flex-col justify-center gap-4 w-full text-2xl"
+      >
+        <Input
+          type="email"
+          placeholder="Email"
+          register={register}
+          name="email"
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          register={register}
+          name="password"
+        />
         <Button type="submit" text="SIGNIN" />
       </form>
 
