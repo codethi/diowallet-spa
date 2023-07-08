@@ -4,12 +4,27 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import { BiArrowBack } from "react-icons/bi";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ErrorInput from "../components/ErrorInput";
+import { signupSchema } from "../schemas/SignupSchema";
+import { signup } from "../services/user";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(signupSchema) });
+  const navigate = useNavigate();
 
-  function handleSubmitForm(data) {
-    console.log(data);
+  async function handleSubmitForm(data) {
+    try {
+      await signup(data);
+      navigate("/signin");
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   return (
@@ -29,24 +44,30 @@ export default function Signup() {
           register={register}
           name="name"
         />
+        {errors.name && <ErrorInput text={errors.name.message} />}
         <Input
           type="email"
           placeholder="Email"
           register={register}
           name="email"
         />
+        {errors.email && <ErrorInput text={errors.email.message} />}
         <Input
           type="password"
           placeholder="Password"
           register={register}
           name="password"
         />
+        {errors.password && <ErrorInput text={errors.password.message} />}
         <Input
           type="password"
           placeholder="Confirm Password"
           register={register}
           name="confirmPassword"
         />
+        {errors.confirmPassword && (
+          <ErrorInput text={errors.confirmPassword.message} />
+        )}
         <Button type="submit" text="SIGNUP" />
       </form>
     </div>

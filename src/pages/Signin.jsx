@@ -4,8 +4,16 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import { useForm } from "react-hook-form";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import ErrorInput from "../components/ErrorInput";
+import { signinSchema } from "../schemas/SigninSchema";
+
 export default function Signin() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(signinSchema) });
 
   function handleSubmitForm(data) {
     console.log(data);
@@ -24,12 +32,14 @@ export default function Signin() {
           register={register}
           name="email"
         />
+        {errors.email && <ErrorInput text={errors.email.message} />}
         <Input
           type="password"
           placeholder="Password"
           register={register}
           name="password"
         />
+        {errors.password && <ErrorInput text={errors.password.message} />}
         <Button type="submit" text="SIGNIN" />
       </form>
 
