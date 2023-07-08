@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorInput from "../components/ErrorInput";
 import { signinSchema } from "../schemas/SigninSchema";
+import { signin } from "../services/user";
+import Cookies from "js-cookie";
 
 export default function Signin() {
   const {
@@ -15,8 +17,13 @@ export default function Signin() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(signinSchema) });
 
-  function handleSubmitForm(data) {
-    console.log(data);
+  async function handleSubmitForm(data) {
+    try {
+      const token = await signin(data);
+      Cookies.set("token", token.data, { expires: 1 });
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   return (
