@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Button from "../components/Button";
 import Input from "../components/Input";
@@ -16,11 +16,13 @@ export default function Signin() {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(signinSchema) });
+  const navigate = useNavigate();
 
   async function handleSubmitForm(data) {
     try {
       const token = await signin(data);
       Cookies.set("token", token.data, { expires: 1 });
+      navigate("/");
     } catch (error) {
       console.log(error.message);
     }
