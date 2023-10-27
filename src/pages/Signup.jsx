@@ -9,6 +9,7 @@ import ErrorInput from "../components/ErrorInput";
 import { signupSchema } from "../schemas/SignupSchema";
 import { signup } from "../services/user";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Signup() {
   const {
@@ -17,6 +18,7 @@ export default function Signup() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(signupSchema) });
   const navigate = useNavigate();
+  const [apiErrors, setApiErrors] = useState("");
 
   async function handleSubmitForm(data) {
     try {
@@ -24,6 +26,7 @@ export default function Signup() {
       navigate("/signin");
     } catch (error) {
       console.log(error.message);
+      setApiErrors(error.message);
     }
   }
 
@@ -34,6 +37,7 @@ export default function Signup() {
       </Link>
 
       <img src={logo} alt="" className="w-44" />
+      {apiErrors && <ErrorInput text={apiErrors} />}
       <form
         onSubmit={handleSubmit(handleSubmitForm)}
         className="flex flex-col items-center justify-center gap-4 w-full text-2xl"

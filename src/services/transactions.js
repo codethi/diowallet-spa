@@ -10,3 +10,11 @@ export function findAllTransaction() {
 
   return response;
 }
+
+export function createNewTransaction(body) {
+  const response = axios.post(`${BASE_URL}/transactions`, body, {
+    headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+  });
+
+  return response;
+}

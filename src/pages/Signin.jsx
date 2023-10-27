@@ -9,6 +9,7 @@ import ErrorInput from "../components/ErrorInput";
 import { signinSchema } from "../schemas/SigninSchema";
 import { signin } from "../services/user";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 export default function Signin() {
   const {
@@ -17,6 +18,7 @@ export default function Signin() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(signinSchema) });
   const navigate = useNavigate();
+  const [apiErrors, setApiErrors] = useState("");
 
   async function handleSubmitForm(data) {
     try {
@@ -25,12 +27,18 @@ export default function Signin() {
       navigate("/");
     } catch (error) {
       console.log(error.message);
+      setApiErrors(error.message);
     }
   }
+
+  useEffect(() => {
+    Cookies.remove("token");
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-around bg-zinc-900 rounded p-8 w-[35rem] h-[35rem]">
       <img src={logo} alt="" className="w-44" />
+      {apiErrors && <ErrorInput text={apiErrors} />}
       <form
         onSubmit={handleSubmit(handleSubmitForm)}
         className="flex flex-col justify-center gap-4 w-full text-2xl"
